@@ -12,13 +12,15 @@ import numpy
 import math
 from copy import copy, deepcopy
 import matplotlib.pyplot as plt
+import os
+#import cv2
 
 brojJedinki=100
 brojCiklusa=100
 poeni=[]
 koeficijentMutacije=0.05
 koeficijentRekombinacije=0.05
-brojGeneracija=1000
+brojGeneracija=10
 cc=3
 cd=0
 dc=5
@@ -200,6 +202,7 @@ def genetskiAlgoritam():
     vreme = list(range(0,brojGeneracija))
     matrica= numpy.zeros([brojGeneracija,64], dtype=int)
     for t in range (brojGeneracija):
+        print (t)
         dekadno=[]
         pokreniSukobeUGeneraciji()
         razmnozavanje()
@@ -212,6 +215,8 @@ def genetskiAlgoritam():
             for i in range (0,63):
                 if dekadno[k]==i:
                     matrica[t][i]=matrica[t][i]+1
+        plt.scatter(t, brojJedinki)
+    plt.show()
     for i in range(razliciteStrategije):
         for k in range (brojGeneracija): 
             a=column(matrica,i)
@@ -219,27 +224,32 @@ def genetskiAlgoritam():
         print (a)
         plt.plot(vreme, a)
         axes = plt.gca()
-        axes.set_xlim([0,1000])
+        axes.set_xlim([0,brojGeneracija])
         axes.set_ylim([0,64])
         plt.ylabel('Broj strategije u generaciji')
         plt.xlabel('Generacija')
         plt.show()
-        plt.savefig("grafik")
-    return (matrica)
+        putanja=(r'C:\Users\nina\Desktop\projekat2018\grafici3\grafik')
+        a=putanja + str(i) + '.jpg'
+        ''.join(a)
+        plt.savefig(a) 
+        display (a)
+        
+         
+        
     
 
 populacija=kreirajPopulaciju()
 napraviPoene(brojJedinki)
+os.makedirs(r'C:\Users\nina\Desktop\projekat2018\grafici3')
+plt.ioff()
 
-#def plotovanje(m):    
-#    a=[]
-#    vreme=[]
-#    for i in range(64):
-#        for k in range (brojGeneracija): 
-#            a=column(m,i)
-#            vreme.append(k)
-#        plt.plot(a, vreme)
-#    return (a)
-#
-
+#def napraviFolder():
+#    for i in range (3):   
+#        a=[]
+#        pth=[]
+#        pth=(r'C:\Users\nina\Desktop\projekat2018\')
+#        a=pth+str(i)
+#        ''.join(a)
+#        os.makedirs(a)
 
