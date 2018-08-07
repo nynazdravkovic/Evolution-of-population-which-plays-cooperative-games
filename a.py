@@ -215,8 +215,9 @@ def genetskiAlgoritam():
             for i in range (0,63):
                 if dekadno[k]==i:
                     matrica[t][i]=matrica[t][i]+1
-        plt.scatter(t, brojJedinki)
+        plt.plot(t, brojJedinki)
     plt.show()
+    #ovde krece plotovanje
     for i in range(razliciteStrategije):
         for k in range (brojGeneracija): 
             a=column(matrica,i)
@@ -228,20 +229,19 @@ def genetskiAlgoritam():
         axes.set_ylim([0,64])
         plt.ylabel('Broj strategije u generaciji')
         plt.xlabel('Generacija')
-        plt.show()
-        putanja=(r'C:\Users\nina\Desktop\projekat2018\grafici3\grafik')
-        a=putanja + str(i) + '.jpg'
+        putanja=(r'C:\Users\nina\Desktop\projekat2018\grafici2\grafik')
+        a=putanja + str(i) + '.pdf'
         ''.join(a)
         plt.savefig(a) 
-        display (a)
-        
+        plt.show()
+
          
-        
+
     
 
 populacija=kreirajPopulaciju()
 napraviPoene(brojJedinki)
-os.makedirs(r'C:\Users\nina\Desktop\projekat2018\grafici3')
+os.makedirs(r'C:\Users\nina\Desktop\projekat2018\grafici2')
 plt.ioff()
 
 #def napraviFolder():
