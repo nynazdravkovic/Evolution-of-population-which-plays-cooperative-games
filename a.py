@@ -18,7 +18,7 @@ brojCiklusa=100
 poeni=[]
 koeficijentMutacije=0.05
 koeficijentRekombinacije=0.05
-brojGeneracija=1000
+brojGeneracija=100
 cc=3
 cd=0
 dc=5
@@ -218,9 +218,13 @@ def genetskiAlgoritam():
             #reme[k]
         print (a)
         plt.plot(vreme, a)
+        axes = plt.gca()
+        axes.set_xlim([0,100])
+        axes.set_ylim([0,64])
+        plt.ylabel('Broj strategije u generaciji')
+        plt.xlabel('Generacija')
         plt.show()
-    
-    
+        plt.saveig("grafik")
     return (matrica)
     
 
