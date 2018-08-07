@@ -18,7 +18,7 @@ brojCiklusa=100
 poeni=[]
 koeficijentMutacije=0.05
 koeficijentRekombinacije=0.05
-brojGeneracija=100
+brojGeneracija=1000
 cc=3
 cd=0
 dc=5
@@ -219,8 +219,10 @@ def genetskiAlgoritam():
         print (a)
         plt.plot(vreme, a)
         plt.show()
+    
+    
     return (matrica)
-
+    
 
 populacija=kreirajPopulaciju()
 napraviPoene(brojJedinki)
