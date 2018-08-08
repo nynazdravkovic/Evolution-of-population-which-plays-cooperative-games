@@ -13,17 +13,18 @@ import math
 from copy import copy, deepcopy
 import matplotlib.pyplot as plt
 import os
+from numba import jit
 
 brojJedinki=100
 brojCiklusa=100
 poeni=[]
 koeficijentMutacije=0.01
 koeficijentRekombinacije=0.05
-brojGeneracija=100
-cc=1
+brojGeneracija=90
+cc=0
 cd=0
-dc=3
-dd=2
+dc=1
+dd=-10
 razliciteStrategije=64
 def generisiStrategiju():
     strategija=[]
@@ -56,7 +57,7 @@ def birajClan(niz, peti, sesti):
             clan=niz[3]
     return clan
 
-    
+#@jit(nopython=True)   
 def pokreniSukobeUGeneraciji():
     brojJedinki=len(populacija)
     #print(brojJedinki)
@@ -202,7 +203,7 @@ def column(matrix, i):
 
 def genetskiAlgoritam(): 
     vreme=[]
-    k=[0,brojGeneracija]
+    #k=[0,brojGeneracija]
     vreme = list(range(0,brojGeneracija))
     matrica= numpy.zeros([brojGeneracija,64], dtype=int)
     for t in range (brojGeneracija):
@@ -219,7 +220,7 @@ def genetskiAlgoritam():
             for i in range (0,63):
                 if dekadno[k]==i:
                     matrica[t][i]=matrica[t][i]+1
-        plt.scatter(k, srednjaVrednost(poeni))
+        plt.scatter(t, srednjaVrednost(poeni))
     plt.show()
     #ovde krece plotovanje
     for i in range(razliciteStrategije):
@@ -230,13 +231,13 @@ def genetskiAlgoritam():
         plt.plot(vreme, a)
         axes = plt.gca()
         axes.set_xlim([0,brojGeneracija])
-        axes.set_ylim([0,64])
+        #axes.set_ylim([0,64])
         plt.ylabel('Broj strategije u generaciji')
         plt.xlabel('Generacija')
-        putanja=(r'C:\Users\nina\Desktop\projekat2018\deadlock\grafik')
+        putanja=(r'C:\Users\nina\Desktop\projekat2018\volontiranje\grafik')
         a=putanja + str(i) + '.pdf'
         ''.join(a)
-        plt.savefig(a, dpi=(600,600))
+        plt.savefig(a)
         plt.show()
 
          
@@ -245,15 +246,8 @@ def genetskiAlgoritam():
 
 populacija=kreirajPopulaciju()
 napraviPoene(brojJedinki)
-os.makedirs(r'C:\Users\nina\Desktop\projekat2018\deadlock')
+os.makedirs(r'C:\Users\nina\Desktop\projekat2018\volontiranje')
 plt.ioff()
 
-#def napraviFolder():
-#    for i in range (3):   
-#        a=[]
-#        pth=[]
-#        pth=(r'C:\Users\nina\Desktop\projekat2018\')
-#        a=pth+str(i)
-#        ''.join(a)
-#        os.makedirs(a)
+
 
