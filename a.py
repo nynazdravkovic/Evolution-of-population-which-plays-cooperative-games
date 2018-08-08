@@ -18,12 +18,12 @@ import os
 brojJedinki=100
 brojCiklusa=100
 poeni=[]
-koeficijentMutacije=0.05
+koeficijentMutacije=0.01
 koeficijentRekombinacije=0.05
-brojGeneracija=10
-cc=3
-cd=0
-dc=5
+brojGeneracija=100
+cc=2
+cd=1
+dc=0
 dd=1
 razliciteStrategije=64
 def generisiStrategiju():
@@ -187,6 +187,8 @@ def rekombinacije():
         #print(d)
         #print(e)
         
+
+
 def prebacivanjeUDek(niz):
     dekadni=0
     for i in range (6):
@@ -197,8 +199,11 @@ def column(matrix, i):
     return [row[i] for row in matrix]
 
 
+
+
 def genetskiAlgoritam(): 
     vreme=[]
+    k=[0,brojGeneracija]
     vreme = list(range(0,brojGeneracija))
     matrica= numpy.zeros([brojGeneracija,64], dtype=int)
     for t in range (brojGeneracija):
@@ -215,21 +220,21 @@ def genetskiAlgoritam():
             for i in range (0,63):
                 if dekadno[k]==i:
                     matrica[t][i]=matrica[t][i]+1
-        plt.plot(t, brojJedinki)
+        plt.scatter(k, srednjaVrednost(poeni))
     plt.show()
     #ovde krece plotovanje
     for i in range(razliciteStrategije):
         for k in range (brojGeneracija): 
             a=column(matrica,i)
             #reme[k]
-        print (a)
+        #print (a)
         plt.plot(vreme, a)
         axes = plt.gca()
         axes.set_xlim([0,brojGeneracija])
         axes.set_ylim([0,64])
         plt.ylabel('Broj strategije u generaciji')
         plt.xlabel('Generacija')
-        putanja=(r'C:\Users\nina\Desktop\projekat2018\grafici2\grafik')
+        putanja=(r'C:\Users\nina\Desktop\projekat2018\lovNaJelene\grafik')
         a=putanja + str(i) + '.pdf'
         ''.join(a)
         plt.savefig(a) 
@@ -241,7 +246,7 @@ def genetskiAlgoritam():
 
 populacija=kreirajPopulaciju()
 napraviPoene(brojJedinki)
-os.makedirs(r'C:\Users\nina\Desktop\projekat2018\grafici2')
+os.makedirs(r'C:\Users\nina\Desktop\projekat2018\lovNaJelene')
 plt.ioff()
 
 #def napraviFolder():
