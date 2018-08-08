@@ -13,7 +13,6 @@ import math
 from copy import copy, deepcopy
 import matplotlib.pyplot as plt
 import os
-#import cv2
 
 brojJedinki=100
 brojCiklusa=100
@@ -21,10 +20,10 @@ poeni=[]
 koeficijentMutacije=0.01
 koeficijentRekombinacije=0.05
 brojGeneracija=100
-cc=2
-cd=1
-dc=0
-dd=1
+cc=1
+cd=0
+dc=3
+dd=2
 razliciteStrategije=64
 def generisiStrategiju():
     strategija=[]
@@ -234,10 +233,10 @@ def genetskiAlgoritam():
         axes.set_ylim([0,64])
         plt.ylabel('Broj strategije u generaciji')
         plt.xlabel('Generacija')
-        putanja=(r'C:\Users\nina\Desktop\projekat2018\lovNaJelene\grafik')
+        putanja=(r'C:\Users\nina\Desktop\projekat2018\deadlock\grafik')
         a=putanja + str(i) + '.pdf'
         ''.join(a)
-        plt.savefig(a) 
+        plt.savefig(a, dpi=(600,600))
         plt.show()
 
          
@@ -246,7 +245,7 @@ def genetskiAlgoritam():
 
 populacija=kreirajPopulaciju()
 napraviPoene(brojJedinki)
-os.makedirs(r'C:\Users\nina\Desktop\projekat2018\lovNaJelene')
+os.makedirs(r'C:\Users\nina\Desktop\projekat2018\deadlock')
 plt.ioff()
 
 #def napraviFolder():
