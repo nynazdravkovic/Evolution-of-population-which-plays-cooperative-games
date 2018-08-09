@@ -20,7 +20,7 @@ brojCiklusa=100
 poeni=[]
 koeficijentMutacije=0.01
 koeficijentRekombinacije=0.05
-brojGeneracija=1100
+brojGeneracija=10
 cc=3
 cd=0
 dc=5
@@ -106,12 +106,14 @@ def prebacivanjeUDek(niz):
     return (dekadni)
 
 def dodavanjePoena():
-    for i1 in range (brojJednki):
-        for j2 in range (brojJednki):
-            a = prebacivanjeUDekadni(populacija[j1])
-            b = prebacivanjeUDekadni(populacija[j2])
-            poeni[j1]+=svakaSaSvakom[a][b][0]
-            poeni[j2]+=svakaSaSvakom[a][b][1]
+    matricaPoena=svakaSaSvakom()
+    brojJedinki=len(populacija)
+    for i1 in range (brojJedinki):
+        for i2 in range (brojJedinki):
+            a = prebacivanjeUDek(populacija[i1])
+            b = prebacivanjeUDek(populacija[i2])
+            poeni[i1]+=matricaPoena[a][b][0]
+            poeni[i2]+=matricaPoena[a][b][1]
             
 def srednjaVrednost(p): #srednja vrednost
     brojJedinki=len(populacija)    
