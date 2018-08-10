@@ -72,18 +72,28 @@ def svakaSaSvakom():#pravim praznu matricu poena
                 
                 if (clan1==1):
                     if (clan2==1):
-                        matricaPoena[j1][j2]=matricaPoena[j1][j2]+cc
-                        matricaPoena[j2][j1]=matricaPoena[j2][j1]+cc
+                        if j1!=j2:
+                            matricaPoena[j1][j2]=matricaPoena[j1][j2]+cc
+                            matricaPoena[j2][j1]=matricaPoena[j2][j1]+cc
+                        else:
+                            matricaPoena[j2][j1]=matricaPoena[j2][j1]+cc
+                        
                     else:
                         matricaPoena[j1][j2]=matricaPoena[j1][j2]+cd
                         matricaPoena[j2][j1]=matricaPoena[j2][j1]+dc
+                        #print(cd)
                 else:
                     if (clan2==1):
                         matricaPoena[j1][j2]=matricaPoena[j1][j2]+dc
                         matricaPoena[j2][j1]=matricaPoena[j2][j1]+cd
+                        #print(dc)
                     else:
-                        matricaPoena[j1][j2]=matricaPoena[j1][j2]+dd
-                        matricaPoena[j2][j1]=matricaPoena[j2][j1]+dd
+                        if j1!=j2:
+                            matricaPoena[j1][j2]=matricaPoena[j1][j2]+dd
+                            matricaPoena[j2][j1]=matricaPoena[j2][j1]+dd
+                        else:
+                            matricaPoena[j2][j1]=matricaPoena[j2][j1]+dd
+                        #print(dd)
     return (matricaPoena)
 
 
@@ -231,6 +241,7 @@ def column(matrix, i):
 def genetskiAlgoritam(): 
     vreme=[]
     #k=[0,brojGeneracija]
+    #print(prebacivanjeUDek('101000'))
     vreme = list(range(0,brojGeneracija))
     matrica= numpy.zeros([brojGeneracija,64], dtype=int)
     for t in range (brojGeneracija):
