@@ -122,24 +122,25 @@ def dodavanjePoena(matrica):
             poeni[i2]=poeni[i2] + matrica[b][a]
 
 
+
 def razmnozavanje():
     global populacija
-    
     brojJedinki=len(populacija)   
     populacija2=deepcopy(populacija) 
     sv=numpy.mean(poeni)
-    print(sv)
     std=numpy.std(poeni)
-    print(std)
-    while len(populacija)<=len(populacija2):
-        for k in range (brojJedinki):
-            if poeni[k]>=sv+std:
-                for p in range (2):
+    for k in range (brojJedinki):
+        if poeni[k]<sv-std:
+            populacija2.remove(populacija[k])
+        l=len(populacija)-len(populacija2)
+    for j in range (brojJedniki):
+       for l in range (l):
+            if populacija[k]>=sv+std:
+                for i in range (2):
                     populacija2.append(populacija[k])
-            elif poeni[k]<sv+std and poeni[k]>=sv-std:
+            else:
                 populacija2.append(populacija[k])
     populacija=deepcopy(populacija2)
-    brojJedinki=len(populacija)
     print('BrojJedinki:', brojJedinki)
     return (populacija)
 
@@ -153,20 +154,29 @@ def mutacije():
         populacija[a]=populacija[a]^(1<<b)
 
 
-#def krosover():
-#    global populacija
-#    brojJedniki=len(populacija)
-#    for f in range(int(brojJedinki*koeficijentRekombinacije)):
-#        a=random.randint(0,brojJedinki)  
-#        b=random.randint(0,brojJedinki)
-#        c=random.randint(0,6)  #biramo mesto na kome se lome strategije  
-#        mask=(1<<(c+1))-1
-#        donji1=populacija[a] & mask
-#        donji2=populacija[b] & mask
-#        gornji1=populacija[a]-donji1
-#        gornji2=populacija[b]-donji2
-#        populacija[a]=gornji1+donji2
-#        populacija[b]=gornji2+donji1
+
+def mutacije():
+    brojJedniki=len(populacija)
+    for f in range (int(len(populacija)*koeficijentMutacije)):
+        a=random.randint(0,brojJedinki)#random indeks
+        #print(populacija[a])
+        b=random.randint(0,5)#random prelomno mesto
+        populacija[a]=populacija[a]^(1<<b)
+
+
+def krosover():
+    global populacija
+    for f in range(int(brojJedinki*koeficijentRekombinacije)):
+        a=random.randint(0,brojJedinki)  
+        b=random.randint(0,brojJedinki)
+        c=random.randint(0,6)  #biramo mesto na kome se lome strategije  
+        mask=(1<<(c+1))-1
+        donji1=populacija[a] & mask
+        donji2=populacija[b] & mask
+        gornji1=populacija[a]-donji1
+        gornji2=populacija[b]-donji2
+        populacija[a]=gornji1+donji2
+        populacija[b]=gornji2+donji1
 
 
 def column(matrix, i):
@@ -178,12 +188,12 @@ def genetskiAlgoritam():
     matrica= numpy.zeros([brojGeneracija,64], dtype=int)
 #    for n in range (10):
 #        populacija=kreirajPopulaciju()
-    brojJedniki=len(populacija)
+#    brojJedniki=len(populacija)
     for t in range (brojGeneracija):
         dodavanjePoena(matricaPoena)
         razmnozavanje()
         mutacije()
-        #krosover()
+        krosover()
         #prebacujem populaciju u deekadni niz
         for k in range (brojJedinki):
             for i in range (0,63):
@@ -216,6 +226,12 @@ napraviPoene(brojJedinki)
 matricaPoena=svakaSaSvakom()
 #os.makedirs(r'C:\Users\nina\Desktop\projekat2018\optimizovano')
 plt.ioff()
-
+def cuvanje():
+    populacija= map(str, populacija)    
+    text_file = open("Output8.txt", "w")
+    text_file.write(''.join(populacija))
+    text_file.close()
+    putanja=(r'C:\Users\nina\Desktop\projekat2018\txt\grafik')
+    b=putanja + '.txt'
 
 
