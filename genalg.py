@@ -18,9 +18,9 @@ from numba import jit
 brojJedinki=100
 brojCiklusa=100
 poeni=[]
-koeficijentMutacije=0.01
+koeficijentMutacije=0.05
 koeficijentRekombinacije=0.05
-brojGeneracija=5
+brojGeneracija=100
 cc=3
 cd=0
 dc=5
@@ -47,13 +47,13 @@ def svakaSaSvakom():#pravim praznu matricu poena
     populacija1=[]
     matricaPoena=numpy.zeros([64,64], dtype=int)
     for i in range (64): #pravim strategije
-        strategija1=list(str(bin(i)[2:].zfill(6)))
-        populacija1.append(strategija1)
+        strategija1=list(bin(i)[2:].zfill(6))
+        strategija=''.join(strategija1)
+        populacija1.append(strategija)
     istorijaSukoba = numpy.zeros([64,64], dtype=int)
     for j1 in range(64):
         for j2 in range(64):
             for x in range(brojCiklusa):
-                #if j1!=j2:                    
                 if x==0:
                     petij1=populacija1[j1][4]
                     sestij1=populacija1[j1][5]
@@ -91,12 +91,18 @@ def generisiStrategiju():
         strategija.append(random.randint(0,1))
     return strategija
 
-    
 def kreirajPopulaciju():
     populacija=[]
-    for x in range(brojJedinki):
-        populacija.append(generisiStrategiju())
-    return populacija
+    for i in range (64): #pravim strategije
+        strategija1=list(str(bin(i)[2:].zfill(6)))
+        strategija=''.join(strategija1)
+        populacija.append(strategija)
+    return (populacija)
+#def kreirajPopulaciju():
+#    populacija=[]
+#    for x in range(brojJedinki):
+#        populacija.append(generisiStrategiju())
+#    return populacija
 
 
 def napraviPoene(brj):
@@ -108,7 +114,7 @@ def napraviPoene(brj):
 def prebacivanjeUDek(niz):
     dekadni=0
     for i in range (6):
-        if niz[-i-1]==1:
+        if int(niz[-i-1])==1:
             dekadni=dekadni+2**i
     return (dekadni)
 
@@ -118,6 +124,7 @@ def dodavanjePoena(matrica):
     napraviPoene(brojJedinki)
     for i1 in range (brojJedinki):
         for i2 in range (i1, brojJedinki):
+
             a = prebacivanjeUDek(populacija[i1])
             b = prebacivanjeUDek(populacija[i2])
             poeni[i1]=poeni[i1] + matrica[a][b]
@@ -225,19 +232,22 @@ def genetskiAlgoritam():
     matrica= numpy.zeros([brojGeneracija,64], dtype=int)
     for t in range (brojGeneracija):
         print (t)
-        dekadno=[]
+        brojJedinki=len(populacija)
+        dekadnaPopulacija=[]
         dodavanjePoena(matricaPoena)
         print('standardna', standardnaDevijacija(poeni))
         print('srednja', srednjaVrednost(poeni))
         razmnozavanje()
+        brojJedinki=len(populacija)
         mutacije()
         rekombinacije()
         brojJedinki=len(populacija)
+        #prebacujem populaciju u deekadni niz
         for i in range (brojJedinki):
-            dekadno.append(prebacivanjeUDek(populacija[i]))
+            dekadnaPopulacija.append(prebacivanjeUDek(populacija[i]))
         for k in range (brojJedinki):
             for i in range (0,63):
-                if dekadno[k]==i:
+                if dekadnaPopulacija[k]==i:
                     matrica[t][i]=matrica[t][i]+1
         plt.scatter(t, srednjaVrednost(poeni))
     plt.show()
@@ -245,18 +255,16 @@ def genetskiAlgoritam():
     for i in range(razliciteStrategije):
         for k in range (brojGeneracija): 
             a=column(matrica,i)
-            #reme[k]
-        #print (a)
         plt.plot(vreme, a)
         axes = plt.gca()
         axes.set_xlim([0,brojGeneracija])
         #axes.set_ylim([0,64])
         plt.ylabel('Broj strategije u generaciji')
         plt.xlabel('Generacija')
-        putanja=(r'C:\Users\nina\Desktop\projekat2018\zatvorenikovaDilema\grafik')
-        a=putanja + str(i) + '.pdf'
-        ''.join(a)
-        plt.savefig(a)
+        putanja=(r'C:\Users\nina\Desktop\projekat2018\optimizacija4\grafik')
+        b=putanja + str(i) + '.pdf'
+        ''.join(b)
+        plt.savefig(b)
         plt.show()
 
          
@@ -266,51 +274,51 @@ def genetskiAlgoritam():
 populacija=kreirajPopulaciju()
 napraviPoene(brojJedinki)
 matricaPoena=svakaSaSvakom()
-#os.makedirs(r'C:\Users\nina\Desktop\projekat2018\zatvorenikovaDilema')
+#os.makedirs(r'C:\Users\nina\Desktop\projekat2018\optimizacija')
 plt.ioff()
 
 ##@jit(nopython=True)   
 
 
 #Stari deo koda koji se ponavljao stalno i koji radi
-#def pokreniSukobeUGeneraciji():
-#    brojJedinki=len(populacija) 
-#    #print(brojJedinki)
-#    napraviPoene(brojJedinki)
-#    istorijaSukoba = numpy.zeros([brojJedinki,brojJedinki], dtype=int)
-#    for j1 in range(brojJedinki):
-#        for j2 in range(j1, brojJedinki):
-#            if j1!=j2:
-#                for x in range(1):
-#                    if x==0:
-#                        petij1=populacija[j1][4]
-#                        sestij1=populacija[j1][5]
-#                        petij2=populacija[j2][4]
-#                        sestij2=populacija[j2][5]
-#                    else:
-#                        petij1=istorijaSukoba[j1][j2]
-#                        petij2=istorijaSukoba[j2][j1]
-#                        sestij1=petij2
-#                        sestij2=petij1
-#                    clan1=birajClan(populacija[j1], petij1, sestij1)
-#                    clan2=birajClan(populacija[j2], petij2, sestij2)
-#                    istorijaSukoba[j1][j2]=clan1
-#                    istorijaSukoba[j2][j1]=clan2
-#                    #print(istorijaSukoba)
-#                    if clan1==1:
-#                        if clan2==1:
-#                            poeni[j1]=poeni[j1]+cc
-#                            poeni[j2]=poeni[j2]+cc
-#                        else:
-#                            poeni[j1]=poeni[j1]+cd
-#                            poeni[j2]=poeni[j2]+dc
-#                    else:
-#                        if clan2==1:
-#                            poeni[j1]=poeni[j1]+dc
-#                            poeni[j2]=poeni[j2]+cd
-#                        else:
-#                            poeni[j1]=poeni[j1]+dd
-#                            poeni[j2]=poeni[j2]+dd
-#    return (poeni)
-#
+def pokreniSukobeUGeneraciji():
+    brojJedinki=len(populacija) 
+    #print(brojJedinki)
+    napraviPoene(brojJedinki)
+    istorijaSukoba = numpy.zeros([brojJedinki,brojJedinki], dtype=int)
+    for j1 in range(brojJedinki):
+        for j2 in range(j1, brojJedinki):
+            if j1!=j2:
+                for x in range(brojCiklusa):
+                    if x==0:
+                        petij1=populacija[j1][4]
+                        sestij1=populacija[j1][5]
+                        petij2=populacija[j2][4]
+                        sestij2=populacija[j2][5]
+                    else:
+                        petij1=istorijaSukoba[j1][j2]
+                        petij2=istorijaSukoba[j2][j1]
+                        sestij1=petij2
+                        sestij2=petij1
+                    clan1=int(birajClan(populacija[j1], petij1, sestij1))
+                    clan2=int(birajClan(populacija[j2], petij2, sestij2))
+                    istorijaSukoba[j1][j2]=clan1
+                    istorijaSukoba[j2][j1]=clan2
+                    #print(istorijaSukoba)
+                    if clan1==1:
+                        if clan2==1:
+                            poeni[j1]=poeni[j1]+cc
+                            poeni[j2]=poeni[j2]+cc
+                        else:
+                            poeni[j1]=poeni[j1]+cd
+                            poeni[j2]=poeni[j2]+dc
+                    else:
+                        if clan2==1:
+                            poeni[j1]=poeni[j1]+dc
+                            poeni[j2]=poeni[j2]+cd
+                        else:
+                            poeni[j1]=poeni[j1]+dd
+                            poeni[j2]=poeni[j2]+dd
+    return (poeni)
+
 #
