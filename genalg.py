@@ -27,6 +27,7 @@ dc=5
 dd=1
 razliciteStrategije=64
 
+
 def birajClan(niz, peti, sesti):
     if peti==0:
         if sesti==0:
@@ -38,22 +39,23 @@ def birajClan(niz, peti, sesti):
             clan=niz[2]
         else:
             clan=niz[3]
-    #print (clan)
     return clan
 
 
     
 def svakaSaSvakom():#pravim praznu matricu poena
     populacija1=[]
-    matricaPoena=numpy.zeros([4,4], dtype=int)
-    for i in range (4): #pravim strategije
+    strategija=[]
+    matricaPoena=numpy.zeros([64,64], dtype=int)
+    for i in range (64): #pravim strategije
         strategija1=list(bin(i)[2:].zfill(6))
-        strategija=''.join(strategija1)
+        for x in range (6):
+            strategija.append(int(strategija1[x]))
         populacija1.append(strategija)
         print (populacija1)
-    istorijaSukoba = numpy.zeros([4,4], dtype=int)
-    for j1 in range(4):
-        for j2 in range(j1, 4):
+    istorijaSukoba = numpy.zeros([64,64], dtype=int)
+    for j1 in range(64):
+        for j2 in range(j1, 64):
             for x in range(brojCiklusa):
                 if x==0:
                     petij1=int(populacija1[j1][4])
@@ -95,33 +97,32 @@ def svakaSaSvakom():#pravim praznu matricu poena
                             matricaPoena[j2][j1]=matricaPoena[j2][j1]+dd
                         #print(dd)
     return (matricaPoena)
-
-
-#def generisiStrategiju():
-#    strategija=[]
-#    for x in range(6):
-#        strategija.append(random.randint(0,1))
-#    return strategija
-
-def kreirajPopulaciju():
-    populacija=[]
-    for i in range (4): #pravim strategije
-        strategija1=list(str(bin(i)[2:].zfill(6)))
-        strategija=''.join(strategija1)
-        populacija.append(strategija)
-    return (populacija)
-
+    
+def generisiStrategiju():
+    strategija=[]
+    for x in range(6):
+        strategija.append(random.randint(0,1))
+    return strategija
 
 #def kreirajPopulaciju():
 #    populacija=[]
-#    for x in range(brojJedinki):
-#        populacija.append(generisiStrategiju())
-#    return str(populacija)
+#    for i in range (64): #pravim strategije
+#        strategija1=list(str(bin(i)[2:].zfill(6)))
+#        strategija=''.join(strategija1)
+#        populacija.append(strategija)
+#    return (populacija)
+
+
+def kreirajPopulaciju():
+    populacija=[]
+    for x in range(brojJedinki):
+        populacija.append(generisiStrategiju())
+    return str(populacija)
 
 
 def napraviPoene(brj):
     global poeni
-    poeni=[0]*brj
+    poeni=numpy.zeros(brj)
     return poeni
 
 
@@ -144,20 +145,13 @@ def dodavanjePoena(matrica):
             poeni[i2]=poeni[i2] + matrica[b][a]
 
     
-def srednjaVrednost(p): #srednja vrednost
-    brojJedinki=len(populacija)    
-    M=sum(p)
-    M=M/brojJedinki
+def srednjaVrednost():
+    M=mean(poeni)    
     return M
             
             
 def standardnaDevijacija(p): #standardna devijacija
-    dev=0
-    s=0
-    brojJedinki=len(populacija)
-    for x in range(brojJedinki):
-        s=s+((p[x]-srednjaVrednost(p))**2)/(brojJedinki-1)
-    dev=math.sqrt(s)
+    dev=numpy.std(poeni)
     return dev
 
 
