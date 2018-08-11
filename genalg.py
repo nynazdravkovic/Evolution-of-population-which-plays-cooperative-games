@@ -19,7 +19,7 @@ from numba import jit
 brojJedinki=100
 brojCiklusa=200
 poeni=[]
-koeficijentMutacije=0.05
+koeficijentMutacije=0.001
 koeficijentRekombinacije=0.05
 brojGeneracija=100
 cc=3
@@ -27,6 +27,7 @@ cd=0
 dc=5
 dd=1
 razliciteStrategije=64
+matricaPoena= numpy.zeros([brojGeneracija,63], dtype=int)
 
     
 
@@ -147,29 +148,13 @@ def razmnozavanje():
 
 
 def mutacije():
-    global populacija
-    a=random.uniform(0,1)
-    pop=deepcopy(populacija)
-    if a<=koeficijentMutacije:
-        for f in range (int(len(pop)*a)):
-            shuffle(pop)
-            a=random.randint(0,brojJedinki-1)#random indeks
-            #print(populacija[a])
+    for i in range (brojJedinki):
+        a=random.uniform(0,1)
+        if a<=koeficijentMutacije:
             b=random.randint(0,5)#random prelomno mesto
-            pop[a]=pop[a]^(1<<b)
-    populacija=deepcopy(pop)
-#def mutacije():
-#    for k in range (int(len(populacija)*koeficijentMutacije)):
-#        shuffle(populacija)
-#        a=random.randint(0,brojJedinki-1)#random indeks
-#        b=random.randint(0,5)#random prelomno mesto
-#        populacija[a]=populacija[a]^(1<<b)
-#        
-
-
+            populacija[i]=populacija[i]^(1<<b)
 
 def krosover():
-    global populacija
     for f in range(int(brojJedinki*koeficijentRekombinacije)):
         a=random.randint(0,brojJedinki-1)  
         b=random.randint(0,brojJedinki-1)
@@ -188,29 +173,24 @@ def column(matrix, k):
 
 def genetskiAlgoritam(): 
     vreme=list(range(brojGeneracija))
-    matrica= numpy.zeros([brojGeneracija,64], dtype=int)
+    matricaPoena= numpy.zeros([brojGeneracija,64], dtype=int)
     nizSrednjihPoena=[]
     for t in range (brojGeneracija):
         dodavanjePoena(matricaPoena)
         razmnozavanje()
         mutacije()
         krosover()
-        nizSrednjihPoena.append(numpy.mean(poeni)/99/brojCiklusa)
-        #plt.scatter(t, numpy.mean(poeni)/brojCiklusa/brojJedinki)
+        nizSrednjihPoena.append(2*numpy.mean(poeni)/99/brojCiklusa)
         for k in range (brojJedinki):
             for i in range (0,64):
                 if populacija[k]==i:
-                    matrica[t][i]=matrica[t][i]+1
-    #putanja=(r'C:\Users\nina\Desktop\projekat2018\aaa\grafik')
-    #b=putanja + str(i) + '.jpg'
-    #''.join(b)
-    #plt.savefig(b)
-    #plt.show()
-    return matrica, nizSrednjihPoena
+                    matricaPoena[t][i]=matricaPoena[t][i]+1
+    return nizSrednjihPoena
          
 
 def sve():
     matrica1=numpy.zeros([10,64])
+    s=[]
     for x in range (10):
         populacija=kreirajPopulaciju()
         #print(populacija)
@@ -218,26 +198,25 @@ def sve():
         s=[]
         vreme=list(range(brojGeneracija))
         srednja=[]
-        matrica=genetskiAlgoritam()[0]
-        for i in range (brojGeneracija):
-            for k in range (0, 64):        
-                matrica1[x][k]+=matrica[i][k]
-        srednjaVrednost=genetskiAlgoritam()[1]
+        genetskiAlgoritam()    
+        srednjaVrednost=genetskiAlgoritam()
         srednja.append(srednjaVrednost)
-        plt.plot(vreme, srednjaVrednost)        
-        #axes = plt.gca()
-        #axes.set_ylim([0,5])
-        plt.show()    
+        plt.plot(vreme, srednjaVrednost)                
+    plt.show()    
     for x in range (brojGeneracija):
         n=column(srednja,x)
         m=numpy.mean(n)
         s.append(numpy.std(n))
         plt.scatter(x,m)
-    print(numpy.mean(s))
     plt.show()
-    
+    for i in range (brojGeneracija):
+        for k in range (63):
+            matricaPoena[i][k]=matricaPoena[i][k]/10
+    for x in range (63):
+        w=column(matricaPoena,x)
+        plt.plot(vreme,w)
+        plt.show()
 #    for i in range (63):
-#        
 #        a=column(matrica1,i)
 #        print(a)
 #        plt.plot(vreme,a)
@@ -252,9 +231,7 @@ def sve():
 #        plt.show()
 
 
-#
-populacija=kreirajPopulaciju()
-napraviPoene(brojJedinki)
+
 matricaPoena=svakaSaSvakom()
 #os.makedirs(r'C:\Users\nina\Desktop\projekat2018\optimizovano')
 plt.ioff()
@@ -280,3 +257,8 @@ plt.ioff()
 #            text_file1.write(''.join(poeni2))
 #            text_file1.close()
 #            putanja=(r'C:\Users\nina\Desktop\projekat2018\txt\grafik')
+    #putanja=(r'C:\Users\nina\Desktop\projekat2018\aaa\grafik')
+    #b=putanja + str(i) + '.jpg'
+    #''.join(b)
+    #plt.savefig(b)
+    #plt.show()
