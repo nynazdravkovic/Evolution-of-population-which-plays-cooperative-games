@@ -17,17 +17,17 @@ import os
 from numba import jit
 
 brojJedinki=100
-brojCiklusa=200
+brojCiklusa=100
 poeni=[]
 koeficijentMutacije=0.001
 koeficijentRekombinacije=0.05
-brojGeneracija=100
+brojGeneracija=1000
 cc=3
 cd=0
 dc=5
 dd=1
 razliciteStrategije=64
-matricaPoena= numpy.zeros([brojGeneracija,63], dtype=int)
+#matrica= numpy.zeros([brojGeneracija,64], dtype=int)
 
     
 
@@ -116,14 +116,16 @@ def napraviPoene(brj):
     return poeni
 
 
-def dodavanjePoena(matrica):
-    napraviPoene(brojJedinki)
+def dodavanjePoena():
+    #napraviPoene(brojJedinki)
     for i1 in range (brojJedinki):
         for i2 in range (i1, brojJedinki):
             a = populacija[i1]
             b = populacija[i2]
-            poeni[i1]=poeni[i1] + matrica[a][b]
-            poeni[i2]=poeni[i2] + matrica[b][a]
+            poeni[i1]=poeni[i1] + matricaPoena[a][b]
+            poeni[i2]=poeni[i2] + matricaPoena[b][a]
+    #print(matricaPoena)
+    return(poeni)
 
 
 
@@ -172,50 +174,56 @@ def column(matrix, k):
     return [row[k] for row in matrix]
 
 def genetskiAlgoritam(): 
-    vreme=list(range(brojGeneracija))
-    matricaPoena= numpy.zeros([brojGeneracija,64], dtype=int)
+    populacija=kreirajPopulaciju()
     nizSrednjihPoena=[]
     for t in range (brojGeneracija):
-        dodavanjePoena(matricaPoena)
+        poeni=napraviPoene(brojJedinki)
+        dodavanjePoena()
         razmnozavanje()
         mutacije()
         krosover()
-        nizSrednjihPoena.append(2*numpy.mean(poeni)/99/brojCiklusa)
+        nizSrednjihPoena.append(2*numpy.mean(poeni)/(99*brojCiklusa))
         for k in range (brojJedinki):
             for i in range (0,64):
                 if populacija[k]==i:
-                    matricaPoena[t][i]=matricaPoena[t][i]+1
-    return nizSrednjihPoena
+                    matrica[t][i]=matrica[t][i]+1
+    #print(matrica)
+    return nizSrednjihPoena, matrica
          
 
 def sve():
-    matrica1=numpy.zeros([10,64])
-    s=[]
+    #matrica1=numpy.zeros([10,64])
     for x in range (10):
-        populacija=kreirajPopulaciju()
         #print(populacija)
+        s=0
         k=[]
-        s=[]
         vreme=list(range(brojGeneracija))
         srednja=[]
-        genetskiAlgoritam()    
-        srednjaVrednost=genetskiAlgoritam()
+        g=genetskiAlgoritam() 
+        matrica=g[1]
+        genetskiAlgoritam()
+        srednjaVrednost=g[0]
         srednja.append(srednjaVrednost)
-        plt.plot(vreme, srednjaVrednost)                
+        plt.plot(vreme, srednjaVrednost)  
+        for i in range (brojGeneracija):
+            for k in range (63):
+                matrica[i][k]=matrica[i][k]/10
     plt.show()    
     for x in range (brojGeneracija):
         n=column(srednja,x)
         m=numpy.mean(n)
-        s.append(numpy.std(n))
+        s=numpy.std(n)
+        #print (s)
         plt.scatter(x,m)
     plt.show()
-    for i in range (brojGeneracija):
-        for k in range (63):
-            matricaPoena[i][k]=matricaPoena[i][k]/10
+    numpy.rot90(matrica)
+    numpy.rot90(matrica)
     for x in range (63):
-        w=column(matricaPoena,x)
+        w=column(matrica,x)
         plt.plot(vreme,w)
-        plt.show()
+    plt.show()  
+    
+    
 #    for i in range (63):
 #        a=column(matrica1,i)
 #        print(a)
@@ -231,7 +239,7 @@ def sve():
 #        plt.show()
 
 
-
+matrica= numpy.zeros([brojGeneracija,64], dtype=int)
 matricaPoena=svakaSaSvakom()
 #os.makedirs(r'C:\Users\nina\Desktop\projekat2018\optimizovano')
 plt.ioff()
