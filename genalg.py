@@ -18,15 +18,15 @@ from numba import jit
 
 brojJedinki=100
 brojCiklusa=100
-koeficijentMutacije=0.05
+koeficijentMutacije=0.005
 koeficijentKrosovera=0.05
-brojGeneracija=100
+brojGeneracija=10000
 cc=3
-cd=0
-dc=5
+cd=2
+dc=4
 dd=1
 razliciteStrategije=64
-#matrica= numpy.zeros([brojGeneracija,64], dtype=int)
+matrica= numpy.zeros([brojGeneracija,64], dtype=int)
 
     
 
@@ -128,16 +128,15 @@ def dodavanjePoena(pop):
 
 
 def razmnozavanje(poeni,pop):
+    lpoeni=list(poeni)
     populacija2=deepcopy(pop) 
     populacija2=[x for _, x in sorted(zip(poeni,populacija2))]
-    #print(populacija2)
-    for n in range (20):
+    for n in range (7):
         populacija2.append(populacija2[n])
-    #print(populacija2)    
-    populacija2=[x for _, x in sorted(zip(poeni,populacija2))]
+        lpoeni.append(poeni[n])
+    populacija2=[x for _, x in sorted(zip(lpoeni,populacija2))]
     populacija2=populacija2[::-1]
-    for i in range (20):
-        populacija2.remove(populacija2[i])
+    populacija2=populacija2[7:]
     pop=deepcopy(populacija2)
     return (pop)
 
@@ -176,20 +175,25 @@ def genetskiAlgoritam():
         #poeni=napraviPoene(brojJedinki)
         poeni=dodavanjePoena(populacija)
         populacija=razmnozavanje(poeni,populacija)
-        #mutacije(populacija)
-        #krosover(populacija)
+        mutacije(populacija)
+        krosover(populacija)
 #        for k in range (brojJedinki):
 #            for i in range (0,64):
 #                if populacija[k]==i:
 #                    matrica[t][i]=matrica[t][i]+1
-                #plt.scatter(i, matrica[t][i])
-        #plt.show()
+        
         nizSrednjihPoena.append(numpy.mean(poeni)/(99*brojCiklusa))
         plt.scatter(t,numpy.mean(poeni)/(99*brojCiklusa))
     plt.show()
     plt.hist(poeni/(99*brojCiklusa))  
+#    for i in range (brojGeneracija):
+#        plt.plot(vreme,matrica[i])
+#        axes = plt.gca()
+#        axes.set_ylim([0,5])
+#        plt.show()
     
-    return nizSrednjihPoena, matrica
+    
+    #return nizSrednjihPoena, matrica
          
 
 def sve():
