@@ -18,10 +18,9 @@ from numba import jit
 
 brojJedinki=100
 brojCiklusa=100
-poeni=[]
-koeficijentMutacije=0.001
-koeficijentRekombinacije=0.05
-brojGeneracija=1000
+koeficijentMutacije=0.05
+koeficijentKrosovera=0.05
+brojGeneracija=100
 cc=3
 cd=0
 dc=5
@@ -110,91 +109,92 @@ def kreirajPopulaciju():
     return (populacija)
 
 
-def napraviPoene(brj):
-    global poeni
-    poeni=numpy.zeros(brj)
-    return poeni
+#def napraviPoene(brj):
+#    global poeni
+#    poeni=numpy.zeros(brj)
+#    return poeni
 
 
-def dodavanjePoena():
-    #napraviPoene(brojJedinki)
+def dodavanjePoena(pop):
+    poeni=numpy.zeros(brojJedinki)
     for i1 in range (brojJedinki):
         for i2 in range (i1, brojJedinki):
-            a = populacija[i1]
-            b = populacija[i2]
+            a = pop[i1]
+            b = pop[i2]
             poeni[i1]=poeni[i1] + matricaPoena[a][b]
             poeni[i2]=poeni[i2] + matricaPoena[b][a]
-    #print(matricaPoena)
     return(poeni)
 
 
 
-def razmnozavanje():
-    global populacija
-    populacija2=deepcopy(populacija) 
-    sv=numpy.mean(poeni)
-    std=numpy.std(poeni)
-    for k in range (brojJedinki):
-        if poeni[k]<sv-std:
-            populacija2.remove(populacija[k])
-        l=len(populacija)-len(populacija2)
+def razmnozavanje(poeni,pop):
+    populacija2=deepcopy(pop) 
     populacija2=[x for _, x in sorted(zip(poeni,populacija2))]
-    for n in range (l):
-        if populacija[n]>=sv+std:
-            for i in range (2):
-                populacija2.append(populacija[n])
-        else:
-            populacija2.append(populacija[n])
-    populacija=deepcopy(populacija2)
-    return (populacija)
+    #print(populacija2)
+    for n in range (20):
+        populacija2.append(populacija2[n])
+    #print(populacija2)    
+    populacija2=[x for _, x in sorted(zip(poeni,populacija2))]
+    populacija2=populacija2[::-1]
+    for i in range (20):
+        populacija2.remove(populacija2[i])
+    pop=deepcopy(populacija2)
+    return (pop)
 
 
-def mutacije():
+def mutacije(pop):
     for i in range (brojJedinki):
         a=random.uniform(0,1)
         if a<=koeficijentMutacije:
             b=random.randint(0,5)#random prelomno mesto
-            populacija[i]=populacija[i]^(1<<b)
-
-def krosover():
-    for f in range(int(brojJedinki*koeficijentRekombinacije)):
-        a=random.randint(0,brojJedinki-1)  
-        b=random.randint(0,brojJedinki-1)
-        c=random.randint(0,6)  #biramo mesto na kome se lome strategije  
-        mask=(1<<(c+1))-1
-        donji1=populacija[a] & mask
-        donji2=populacija[b] & mask
-        gornji1=populacija[a]-donji1
-        gornji2=populacija[b]-donji2
-        populacija[a]=gornji1+donji2
-        populacija[b]=gornji2+donji1
-
+            pop[i]=pop[i]^(1<<b)
+    return(pop)
+def krosover(pop):
+    for i in range (brojJedinki):
+        g=random.uniform(0,1)
+        if g<=koeficijentKrosovera:
+                a=random.randint(0,brojJedinki-1)  
+                b=random.randint(0,brojJedinki-1)
+                c=random.randint(0,6)  #biramo mesto na kome se lome strategije  
+                mask=(1<<(c+1))-1
+                donji1=pop[a] & mask
+                donji2=pop[b] & mask
+                gornji1=pop[a]-donji1
+                gornji2=pop[b]-donji2
+                pop[a]=gornji1+donji2
+                pop[b]=gornji2+donji1
+    return(pop)
 
 def column(matrix, k):
     return [row[k] for row in matrix]
 
 def genetskiAlgoritam(): 
-    populacija=kreirajPopulaciju()
+    vreme=list(range(0,brojGeneracija))
     nizSrednjihPoena=[]
+    populacija=kreirajPopulaciju()
     for t in range (brojGeneracija):
-        poeni=napraviPoene(brojJedinki)
-        dodavanjePoena()
-        razmnozavanje()
-        mutacije()
-        krosover()
-        nizSrednjihPoena.append(2*numpy.mean(poeni)/(99*brojCiklusa))
-        for k in range (brojJedinki):
-            for i in range (0,64):
-                if populacija[k]==i:
-                    matrica[t][i]=matrica[t][i]+1
-    #print(matrica)
+        #poeni=napraviPoene(brojJedinki)
+        poeni=dodavanjePoena(populacija)
+        populacija=razmnozavanje(poeni,populacija)
+        #mutacije(populacija)
+        #krosover(populacija)
+#        for k in range (brojJedinki):
+#            for i in range (0,64):
+#                if populacija[k]==i:
+#                    matrica[t][i]=matrica[t][i]+1
+                #plt.scatter(i, matrica[t][i])
+        #plt.show()
+        nizSrednjihPoena.append(numpy.mean(poeni)/(99*brojCiklusa))
+        plt.scatter(t,numpy.mean(poeni)/(99*brojCiklusa))
+    plt.show()
+    plt.hist(poeni/(99*brojCiklusa))  
+    
     return nizSrednjihPoena, matrica
          
 
 def sve():
     #matrica1=numpy.zeros([10,64])
     for x in range (10):
-        #print(populacija)
         s=0
         k=[]
         vreme=list(range(brojGeneracija))
@@ -205,10 +205,11 @@ def sve():
         srednjaVrednost=g[0]
         srednja.append(srednjaVrednost)
         plt.plot(vreme, srednjaVrednost)  
-        for i in range (brojGeneracija):
-            for k in range (63):
-                matrica[i][k]=matrica[i][k]/10
-    plt.show()    
+#        for i in range (brojGeneracija):
+#            for k in range (63):
+#                matrica[i][k]=matrica[i][k]
+    plt.show()
+    numpy.rot90(srednja)
     for x in range (brojGeneracija):
         n=column(srednja,x)
         m=numpy.mean(n)
@@ -216,57 +217,6 @@ def sve():
         #print (s)
         plt.scatter(x,m)
     plt.show()
-    numpy.rot90(matrica)
-    numpy.rot90(matrica)
-    for x in range (63):
-        w=column(matrica,x)
-        plt.plot(vreme,w)
-    plt.show()  
-    
-    
-#    for i in range (63):
-#        a=column(matrica1,i)
-#        print(a)
-#        plt.plot(vreme,a)
-#        axes = plt.gca()
-#        axes.set_xlim([0,brojGeneracija])
-#        plt.ylabel('Broj strategije u generaciji')
-#        plt.xlabel('Generacija')
-#        putanja=(r'C:\Users\nina\Desktop\projekat2018\optimizovano\grafik')
-#        b=putanja + str(i) + '.jpg'
-#        ''.join(b)
-#        plt.savefig(b)
-#        plt.show()
+    plt.hist(poeni)
 
-
-matrica= numpy.zeros([brojGeneracija,64], dtype=int)
 matricaPoena=svakaSaSvakom()
-#os.makedirs(r'C:\Users\nina\Desktop\projekat2018\optimizovano')
-plt.ioff()
-#def cuvanje(pop, h):
-#    populacija2=deepcopy(pop)
-#    for i in range (len(pop)):
-#        str(populacija2[i]).join(', ')
-#    populacija2= map(str, pop)   
-#    h=map(str,h)
-#    text_file = open("Output8.txt", "w")
-#    text_file1 = open("Output81.txt", "w")
-#    text_file.write(''.join(populacija2))
-#    text_file.close()
-#    text_file1.write(''.join(h))
-#    text_file1.close()
-#    putanja=(r'C:\Users\nina\Desktop\projekat2018\txt\grafik')
-#    b=putanja + '.txt'
-
-
-#            poeni2=deepcopy(poeni)
-#            poeni2=map(str,poeni2)
-#            text_file1 = open("poeni.txt", "w")
-#            text_file1.write(''.join(poeni2))
-#            text_file1.close()
-#            putanja=(r'C:\Users\nina\Desktop\projekat2018\txt\grafik')
-    #putanja=(r'C:\Users\nina\Desktop\projekat2018\aaa\grafik')
-    #b=putanja + str(i) + '.jpg'
-    #''.join(b)
-    #plt.savefig(b)
-    #plt.show()
