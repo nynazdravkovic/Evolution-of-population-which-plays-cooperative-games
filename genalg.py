@@ -18,12 +18,12 @@ from numba import jit
 
 brojJedinki=100
 brojCiklusa=100
-koeficijentMutacije=0.005
+koeficijentMutacije=0.01
 koeficijentKrosovera=0.05
-brojGeneracija=10000
+brojGeneracija=5000
 cc=3
-cd=2
-dc=4
+cd=0
+dc=5
 dd=1
 razliciteStrategije=64
 matrica= numpy.zeros([brojGeneracija,64], dtype=int)
@@ -131,12 +131,12 @@ def razmnozavanje(poeni,pop):
     lpoeni=list(poeni)
     populacija2=deepcopy(pop) 
     populacija2=[x for _, x in sorted(zip(poeni,populacija2))]
-    for n in range (7):
+    for n in range (5):
         populacija2.append(populacija2[n])
         lpoeni.append(poeni[n])
     populacija2=[x for _, x in sorted(zip(lpoeni,populacija2))]
     populacija2=populacija2[::-1]
-    populacija2=populacija2[7:]
+    populacija2=populacija2[5:]
     pop=deepcopy(populacija2)
     return (pop)
 
@@ -148,6 +148,7 @@ def mutacije(pop):
             b=random.randint(0,5)#random prelomno mesto
             pop[i]=pop[i]^(1<<b)
     return(pop)
+
 def krosover(pop):
     for i in range (brojJedinki):
         g=random.uniform(0,1)
@@ -167,60 +168,73 @@ def krosover(pop):
 def column(matrix, k):
     return [row[k] for row in matrix]
 
+matrica= numpy.zeros([brojGeneracija,64], dtype=int)
+
 def genetskiAlgoritam(): 
     vreme=list(range(0,brojGeneracija))
     nizSrednjihPoena=[]
     populacija=kreirajPopulaciju()
     for t in range (brojGeneracija):
-        #poeni=napraviPoene(brojJedinki)
         poeni=dodavanjePoena(populacija)
         populacija=razmnozavanje(poeni,populacija)
         mutacije(populacija)
         krosover(populacija)
-#        for k in range (brojJedinki):
-#            for i in range (0,64):
-#                if populacija[k]==i:
-#                    matrica[t][i]=matrica[t][i]+1
-        
-        nizSrednjihPoena.append(numpy.mean(poeni)/(99*brojCiklusa))
-        plt.scatter(t,numpy.mean(poeni)/(99*brojCiklusa))
-    plt.show()
+        nizSrednjihPoena.append (numpy.mean(poeni)/(99*brojCiklusa))
+        for k in range (brojJedinki):
+            for i in range (0,64):
+                if populacija[k]==i:
+                    matrica[t][i]=matrica[t][i]+1
+    putanja=(r'C:\Users\nina\Desktop\projekat2018\histogrami\histogram')
+    b=putanja + str(t) + '.jpg'
+    ''.join(b)
+    plt.savefig(b)
     plt.hist(poeni/(99*brojCiklusa))  
-#    for i in range (brojGeneracija):
-#        plt.plot(vreme,matrica[i])
-#        axes = plt.gca()
-#        axes.set_ylim([0,5])
-#        plt.show()
-    
-    
-    #return nizSrednjihPoena, matrica
+    plt.show()
+    m=matrica.transpose()
+    for i in range (64):
+        plt.plot(vreme,m[i])
+        putanja=(r'C:\Users\nina\Desktop\projekat2018\svaka\grafik')
+        b=putanja + str(i) + '.jpg'
+        ''.join(b)
+        plt.savefig(b)
+    plt.show()
+    return nizSrednjihPoena, matrica
          
 
 def sve():
-    #matrica1=numpy.zeros([10,64])
+    o=list(range(0,64))
     for x in range (10):
         s=0
         k=[]
+        vreme=[]
         vreme=list(range(brojGeneracija))
         srednja=[]
         g=genetskiAlgoritam() 
         matrica=g[1]
-        genetskiAlgoritam()
         srednjaVrednost=g[0]
         srednja.append(srednjaVrednost)
         plt.plot(vreme, srednjaVrednost)  
-#        for i in range (brojGeneracija):
-#            for k in range (63):
-#                matrica[i][k]=matrica[i][k]
     plt.show()
+    plt.bar(o,matrica)
     numpy.rot90(srednja)
-    for x in range (brojGeneracija):
-        n=column(srednja,x)
-        m=numpy.mean(n)
-        s=numpy.std(n)
-        #print (s)
-        plt.scatter(x,m)
-    plt.show()
-    plt.hist(poeni)
-
+    m=matrica.transpose()
+    for i in range (brojGeneracija):
+        for k in range (64):
+            m[k][i]=m[k][i]
+    plt.show(m)
+    
+    
+    
 matricaPoena=svakaSaSvakom()
+
+        #plt.scatter(t,numpy.mean(poeni)/(99*brojCiklusa))
+    #axes = plt.gca()
+    #axes.set_ylim([0,5])
+    #plt.show()
+#    
+#    for x in range (brojGeneracija):
+#        n=column(srednja,x)
+#        m=numpy.mean(n)
+#        s=numpy.std(n)
+#        plt.scatter(x,m)
+#    plt.show()
