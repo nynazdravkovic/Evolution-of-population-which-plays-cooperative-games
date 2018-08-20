@@ -1,6 +1,5 @@
 
-
-# -*- coding: utf-8 -*-
+#-*- coding: utf-8 -*-
 """
 Created on Thu May 10 23:41:01 2018
 
@@ -14,14 +13,14 @@ import matplotlib.pyplot as plt
 import json
 
 brojJedinki=100
-brojCiklusa=200
+brojCiklusa=100
 #koeficijentMutacije=0.02
 koeficijentKrosovera=0.05
-brojGeneracija=5000
-cc=1
+brojGeneracija=10
+cc=3
 cd=0
 dc=5
-dd=3
+dd=1
 razliciteStrategije=64
 matrica= numpy.zeros([brojGeneracija,64], dtype=int)
 strategije=list(range(0,63))
@@ -210,174 +209,36 @@ def genetskiAlgoritam(koef, matrica, matricap):
             for i in range (0,64):
                 if populacija[k]==i:
                     matrica[t][i]=matrica[t][i]+1
-        matrica[t][0]+=matrica[t][1]+matrica[t][2]+matrica[t][3]+matrica[t][4]+matrica[t][5]+matrica[t][6]+matrica[t][8]+matrica[t][9]+matrica[t][11]+matrica[t][12]+matrica[t][13]
-        #matrica[t][0]=matrica[t][0]/12
-        #grupa1
-        matrica[t][16]=(matrica[t][16]+matrica[t][18]+matrica[t][19])#/3
-        matrica[t][58]=(matrica[t][58]+matrica[t][57]+matrica[t][56])#/3
-        #grupa2
-        matrica[t][15]=(matrica[t][15]+matrica[t][14])#/2
-        #tft
-        matrica[t][21]=(matrica[t][21]+matrica[t][23])#/2
-        matrica[t][41]=(matrica[t][41]+matrica[t][43])#/2
-        #gtft
-        matrica[t][52]=(matrica[t][52]+matrica[t][53]+matrica[t][55])#/3
-        matrica[t][33]=(matrica[t][34]+matrica[t][35]+matrica[t][33])#/3
-        #grupa3
-        matrica[t][20]=(matrica[t][20]+matrica[t][22])#/2
-        matrica[t][59]=(matrica[t][59]+matrica[t][40])#/2
-        #grupa5
-        matrica[t][24]=(matrica[t][24]+matrica[t][27])#/2
-        matrica[t][42]=(matrica[t][42]+matrica[t][26])#/2
-        #grupa4
-        #pavlov
-        matrica[t][36]=(matrica[t][36]+matrica[t][39]+matrica[t][26])#/3
-        matrica[t][25]=(matrica[t][25]+matrica[t][37]+matrica[t][38])#/3
-        #flipflop
-        matrica[t][48]=(matrica[t][48]+matrica[t][49])#/2
-        matrica[t][50]=(matrica[t][50]+matrica[t][51])#/2
-        matrica[t][63]=(matrica[t][63]+matrica[t][15]+matrica[t][62]+matrica[t][30]+matrica[t][31]+matrica[t][61]+matrica[t][29]+matrica[t][60]+matrica[t][44]+matrica[t][46]+matrica[t][47]+matrica[t][14])#/12
-        matrica[t][1]=0
-        matrica[t][2]=0   
-        matrica[t][3]=0
-        matrica[t][4]=0
-        matrica[t][5]=0
-        matrica[t][6]=0
-        matrica[t][8]=0
-        matrica[t][9]=0
-        matrica[t][11]=0
-        matrica[t][12]=0
-        matrica[t][13]=0
-        matrica[t][14]=0
-        matrica[t][15]=0
-        matrica[t][19]=0
-        matrica[t][18]=0
-        matrica[t][22]=0
-        matrica[t][23]=0
-        matrica[t][27]=0
-        matrica[t][29]=0
-        matrica[t][30]=0
-        matrica[t][31]=0
-        matrica[t][34]=0
-        matrica[t][35]=0
-        matrica[t][37]=0
-        matrica[t][38]=0
-        matrica[t][39]=0
-        matrica[t][42]=0
-        matrica[t][43]=0
-        matrica[t][44]=0
-        matrica[t][46]=0
-        matrica[t][47]=0
-        matrica[t][49]=0
-        matrica[t][51]=0
-        matrica[t][53]=0
-        matrica[t][55]=0
-        matrica[t][57]=0
-        matrica[t][58]=0
-        matrica[t][60]=0
-        matrica[t][61]=0
-        matrica[t][62]=0
-        matricap[t][0]+=matricap[t][1]+matricap[t][2]+matricap[t][3]+matricap[t][4]+matricap[t][5]+matricap[t][6]+matricap[t][8]+matricap[t][9]+matricap[t][11]+matricap[t][12]+matricap[t][13]
-        #matricap[t][0]=matricap[t][0]/12
-        #grupa1
-        matricap[t][16]=(matricap[t][16]+matricap[t][18]+matricap[t][19])#/3
-        matricap[t][58]=(matricap[t][58]+matricap[t][57]+matricap[t][56])#/3
-        #grupa2
-        matricap[t][15]=(matricap[t][15]+matricap[t][14])#/2
-        #tft
-        matricap[t][21]=(matricap[t][21]+matricap[t][23])#/2
-        matricap[t][41]=(matricap[t][41]+matricap[t][43])#/2
-        #gtft
-        matricap[t][52]=(matricap[t][52]+matricap[t][53]+matricap[t][55])#/3
-        matricap[t][33]=(matricap[t][34]+matricap[t][35]+matricap[t][33])#/3
-        #grupa3
-        matricap[t][20]=(matricap[t][20]+matricap[t][22])#/2
-        matricap[t][59]=(matricap[t][59]+matricap[t][40])#/2
-        #grupa5
-        matricap[t][24]=(matricap[t][24]+matricap[t][27])#/2
-        matricap[t][42]=(matricap[t][42]+matricap[t][26])#/2
-        #grupa4
-        #pavlov
-        matricap[t][36]=(matricap[t][36]+matricap[t][39]+matricap[t][26])#/3
-        matricap[t][25]=(matricap[t][25]+matricap[t][37]+matricap[t][38])#/3
-        #flipflop
-        matricap[t][48]=(matricap[t][48]+matricap[t][49])#/2
-        matricap[t][50]=(matricap[t][50]+matricap[t][51])#/2
-        matricap[t][63]=(matricap[t][63]+matricap[t][15]+matricap[t][62]+matricap[t][30]+matricap[t][31]+matricap[t][61]+matricap[t][29]+matricap[t][60]+matricap[t][44]+matricap[t][46]+matricap[t][47]+matricap[t][14])#/12
-        matricap[t][1]=0
-        matricap[t][2]=0   
-        matricap[t][3]=0
-        matricap[t][4]=0
-        matricap[t][5]=0
-        matricap[t][6]=0
-        matricap[t][8]=0
-        matricap[t][9]=0
-        matricap[t][11]=0
-        matricap[t][12]=0
-        matricap[t][13]=0
-        matricap[t][14]=0
-        matricap[t][15]=0
-        matricap[t][19]=0
-        matricap[t][18]=0
-        matricap[t][22]=0
-        matricap[t][23]=0
-        matricap[t][27]=0
-        matricap[t][29]=0
-        matricap[t][30]=0
-        matricap[t][31]=0
-        matricap[t][34]=0
-        matricap[t][35]=0
-        matricap[t][37]=0
-        matricap[t][38]=0
-        matricap[t][39]=0
-        matricap[t][42]=0
-        matricap[t][43]=0
-        matricap[t][44]=0
-        matricap[t][46]=0
-        matricap[t][47]=0
-        matricap[t][49]=0
-        matricap[t][51]=0
-        matricap[t][53]=0
-        matricap[t][55]=0
-        matricap[t][57]=0
-        matricap[t][58]=0
-        matricap[t][60]=0
-        matricap[t][61]=0
-        matricap[t][62]=0
-    plt.hist(poeni/(99*brojCiklusa))
+                    
+
+    plt.hist(poeni/ (99*brojCiklusa))
     plt.ylabel('Broj jedinki')
     plt.xlabel('Poeni')
     plt.title('Zastupljenost poena u generaciji')
     plt.show()
     for i in range (64):
         plt.plot(vreme,column(matrica,[i]))
-        putanja=(r'C:\Users\nina\Desktop\projekat2018\svaka1\grafik')
-        b=putanja + str(i) + '.jpg'
-        ''.join(b)
+#        putanja=(r'C:\Users\nina\Desktop\projekat2018\svaka1\grafik')
+#        b=putanja + str(i) + '.jpg'
+#        ''.join(b)
         plt.ylabel('zastupljenst u drustvu [%]')
         plt.xlabel('t [generacija]')
         plt.title('Zastupljenost srategija po generaciji')
-        plt.savefig(b)
-        plt.clf()
+    plt.show()
+#        plt.savefig(b)
+#        plt.clf()
     for i in range (64):
         plt.plot(vreme,column(matricap,[i]))
-        putanja=(r'C:\Users\nina\Desktop\projekat2018\poeni_svake1\grafik')
-        b=putanja + str(i) + '.jpg'
-        ''.join(b)
+#        putanja=(r'C:\Users\nina\Desktop\projekat2018\poeni_svake1\grafik')
+#        b=putanja + str(i) + '.jpg'
+#        ''.join(b)
         plt.ylabel('srednji poeni startegije')
         plt.xlabel('t [generacija]')
         plt.title('Srednji poeni srategije po generaciji')
-        plt.savefig(b)
-        plt.clf()
-#        srednja=numpy.n.mean(1) #ako obrnemo ose onda je 0, a ne 1
-#        odstupanje=numpy.n.std(1)
-#        minimalno=odstupanje[0]
-#        for i in range(brojGeneracija):
-#            if(odstupanje[i]<minimalno):
-#                minimalno=odstupanje[i]
-#                pamtiIndex=1
-#        procenat=(minimalno/srednja[pamtiIndex])*100
-    
+    plt.show()
+#        plt.savefig(b)
+#        plt.clf()
+
     return nizSrednjihPoena, matrica, matricap
 
 
@@ -393,22 +254,9 @@ def sve(koeficijentMutacije):
         g=genetskiAlgoritam(koeficijentMutacije, matricaZastupljenosti,matricaP) 
         #prviMinimum=-1
         matrica=g[1]
-#        A = numpy.asarray(matrica).reshape(-1)
-#        with open('test1.txt', 'w') as f:
-#            f.write(json.dumps(A))
-#        f.close()
-#        putanja1=(r'C:\Users\nina\Desktop\projekat2018\txt\matrica')
-#        b=putanja1 +str(i)+ '.txt'
         srednjaVrednost=g[0]
         srednja.append(srednjaVrednost)
         matricaPo=g[2]
-#        A = numpy.asarray(matricaPo).reshape(-1)
-#        with open('test1.txt', 'w') as f:
-#            f.write(json.dumps(A))
-#        f.close()
-#        putanja=(r'C:\Users\nina\Desktop\projekat2018\txt\matricaPo')
-#        b=putanja +str(i)+ '.txt'
-
 #        if (g[2]<=):
 #            if (prviMinimum==-1):
 #                prviMinimum=x
@@ -418,10 +266,10 @@ def sve(koeficijentMutacije):
         plt.ylabel('srednji poeni')
         plt.xlabel('generacija')
         plt.title('Srednji poeni po generaciji')
-        putanja=(r'C:\Users\nina\Desktop\projekat2018\srednji_poeni1\grafik')
-        b=putanja + str(x) + '.jpg'
-        ''.join(b)
-        plt.savefig(b)
+#        putanja=(r'C:\Users\nina\Desktop\projekat2018\srednji_poeni1\grafik')
+#        b=putanja + str(x) + '.jpg'
+#        ''.join(b)
+#        plt.savefig(b)
         plt.show()
         plt.bar(o,matrica[brojGeneracija-1])
         plt.ylabel('Zastupljenost strategije')
@@ -481,4 +329,4 @@ matricaPoena=svakaSaSvakom()
     #axes = plt.gca()
     #axes.set_ylim([0,5])
     #plt.show()
-#    
+#  
