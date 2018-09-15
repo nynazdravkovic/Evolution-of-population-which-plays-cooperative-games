@@ -16,7 +16,7 @@ from math import sqrt
 brojJedinki=100
 brojCiklusa=100
 koeficijentKrosovera=0.05
-brojGeneracija=100
+brojGeneracija=1000
 cc=3
 cd=0
 dc=5
@@ -250,14 +250,13 @@ def genetskiAlgoritam(koef, matrica,f):
 #    plt.title('Grafik zastupljenosti poena u generaciji')
 #    plt.show()
     #k=numpy.rot90(matrica)
-    for i in range (64):
-        plt.plot(column(matrica,i))
-    plt.show()
     return nizSrednjihPoena, matrica
+
 
 
 def sve(koeficijentMutacije):
     srednja=[]
+    o=list(range(64))
     matricaZastupljenosti= numpy.zeros([brojGeneracija,64,10], dtype=int)
     a1=numpy.zeros([brojGeneracija,64], dtype=int)
     b1=numpy.zeros([brojGeneracija,64], dtype=int)
@@ -271,11 +270,7 @@ def sve(koeficijentMutacije):
         matrica=g[1]
         srednjaVrednost=g[0]
         srednja.append(srednjaVrednost)
-#        plt.bar(o,matrica[brojGeneracija-1])
-#        plt.ylabel('Zastupljenost strategije')
-#        plt.xlabel('Različite stretgije')
-#        plt.title('Grafik zastupljenosti strategija u posledjoj generaciji')
-#        plt.show()
+        
     numpy.rot90(srednja,3)
     for x in range (brojGeneracija):
         n=column(srednja,x)
@@ -297,9 +292,13 @@ def sve(koeficijentMutacije):
             b=numpy.std(matrica[x][y])/sqrt(10)
             a1[x][y]=a
             b1[x][y]=b
-    
+    plt.bar(o,a1[brojGeneracija-1])
+    plt.ylabel('Zastupljenost strategije')
+    plt.xlabel('Različite stretgije')
+    plt.title('Grafik zastupljenosti strategija u posledjoj generaciji')
+    plt.show()
     for i in range (64):
-        plt.plot(vreme,column(a1,[0]))
+        plt.plot(vreme,column(a1,[0]),label='uvek izdaj')
         plt.errorbar(vreme,column(a1,[0]),column(b1,[0]))
     #    plt.gca().legend('uvek izdaj')
 #        plt.plot(vreme,column(a1,[15]))
@@ -311,34 +310,34 @@ def sve(koeficijentMutacije):
 #        plt.plot(vreme,column(a1,[20]))
 #        plt.errorbar(vreme,column(a1,[20]),column(b1,[20]))
     #    plt.gca().legend('grupa 3')
-        plt.plot(vreme,column(a1,[21]))    
+        plt.plot(vreme,column(a1,[21]), label='TFT')    
         plt.errorbar(vreme,column(a1,[21]),column(b1,[21]))
     #    plt.gca().legend('TFT')
 #        plt.plot(vreme,column(a1,[24]))
 #        plt.errorbar(vreme,column(a1,[24]),column(a1,[24]))
     #    plt.gca().legend('grupa 5')
-        plt.plot(vreme,column(a1,[25]))
+        plt.plot(vreme,column(a1,[25]), label='pavlov')
         plt.errorbar(vreme,column(a1,[25]),column(b1,[25]))
     #    plt.gca().legend('Pavlov')
-        plt.plot(vreme,column(a1,[33]))
+        plt.plot(vreme,column(a1,[33]), label='GTFT')
         plt.errorbar(vreme,column(a1,[33]),column(b1,[33]))
     #    plt.gca().legend('GTFT')
-        plt.plot(vreme,column(a1,[36]))
+        plt.plot(vreme,column(a1,[36]), label='pavlov')
         plt.errorbar(vreme,column(a1,[36]),column(b1,[36]))
     #    plt.gca().legend('Pavlov')
-        plt.plot(vreme,column(a1,[41]))
+        plt.plot(vreme,column(a1,[41]), label='TFT' )
         plt.errorbar(vreme,column(a1,[41]),column(b1,[41]))
     #    plt.gca().legend('TFT')
 #        plt.plot(vreme,column(a1,[42]))
 #        plt.errorbar(vreme,column(a1,[42]),column(b1,[42]))
     #    plt.gca().legend('grupa 5')
-        plt.plot(vreme,column(a1,[48]))
+        plt.plot(vreme,column(a1,[48]),label='flip flop')
         plt.errorbar(vreme,column(a1,[48]),column(b1,[48]))
     #    plt.gca().legend('flip flop')
-        plt.plot(vreme,column(a1,[50]))
+        plt.plot(vreme,column(a1,[50]),label='flip flop')
         plt.errorbar(vreme,column(a1,[50]),column(b1,[50]))
     #    plt.gca().legend('flip flop')
-        plt.plot(vreme,column(a1,[52]))    
+        plt.plot(vreme,column(a1,[52]),label='GTFT')    
         plt.errorbar(vreme,column(a1,[52]),column(b1,[52]))
     #    plt.gca().legend('GTFT')
 #        plt.plot(vreme,column(a1,[58]))
@@ -347,15 +346,15 @@ def sve(koeficijentMutacije):
 #        plt.plot(vreme,column(a1,[59]))
 #        plt.errorbar(vreme,column(a1,[59]),column(b1,[59]))
     #    plt.gca().legend('grupa 3')
-        plt.plot(vreme,column(a1,[63]), label='uvek sarađuj')    
+        plt.plot(vreme,column(a1,[63]),label='uvek saradjuj')    
         plt.errorbar(vreme,column(a1,[63]),column(b1,[63]))
     #    plt.gca().legend('uvek sarađuj')
 
 #        putanja=(r'C:\Users\nina\Desktop\projekat2018\svaka1\grafik')
 #        b=putanja + str(i) + '.jpg'
 #        ''.join(b)   
+#    plt.gca().legend([ 'uvek izdaj','tft','Pavlov','gtft','Pavlov','tft','flip flop','flip flop','gtft', 'uvek sarađuj' ],loc='lower right', ncol = 2)
     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-    plt.gca().legend([ 'uvek izdaj','tft','Pavlov','gtft','Pavlov','tft','flip flop','flip flop','gtft', 'uvek sarađuj' ],loc='lower right', ncol = 2)
     plt.ylabel('zastupljenst u drustvu [%]')
     plt.xlabel('t [generacija]')
     plt.title('Grafik zastupljenosti srategija po generaciji')
