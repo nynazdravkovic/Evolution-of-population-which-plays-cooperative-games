@@ -1,21 +1,19 @@
-
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 Created on Thu May 10 23:41:01 2018
 
 @author: nina
 """
-
 import random
 import numpy
 from copy import copy, deepcopy
 import matplotlib.pyplot as plt
+from math import sqrt
 
 brojJedinki=100
 brojCiklusa=100
-#koeficijentMutacije=0.02
 koeficijentKrosovera=0.05
-brojGeneracija=10
+brojGeneracija=1000
 cc=3
 cd=0
 dc=5
@@ -104,13 +102,6 @@ def kreirajPopulaciju():
         strategije.append(random.choice(strategije))
     return (strategije)
 
-
-#def napraviPoene(brj):
-#    global poeni
-#    poeni=numpy.zeros(brj)
-#    return poeni
-
-
 def dodavanjePoena(pop):
     poeni=numpy.zeros(brojJedinki)
     for i1 in range (brojJedinki):
@@ -121,25 +112,6 @@ def dodavanjePoena(pop):
             poeni[i2]=poeni[i2] + matricaPoena[b][a]
     return(poeni)
 
-
-
-#def razmnozavanje(poeni,pop):
-#    brojJedinki=len(pop)
-#    lpoeni=list(poeni)
-#    populacija2=deepcopy(pop)
-#    sv=numpy.mean(poeni)
-#    std=numpy.std(poeni)
-#    for i in range (brojJedinki):
-#        if poeni[i]<=sv-1.2*std:
-#            populacija2.remove(pop[i])
-#    l=len(pop)-len(populacija2)
-##    print (l)
-#    populacija2=[x for _, x in sorted(zip(poeni,populacija2))]
-#    for i in range (l):
-#        populacija2.append(pop[i])
-#    pop=deepcopy(populacija2)
-##    print(len(pop))
-#    return pop
 
 def razmnozavanje(poeni,pop):
     #lpoeni=list(poeni)
@@ -185,189 +157,84 @@ def column(matrix, k):
     return [row[k] for row in matrix]
 
 
-def genetskiAlgoritam(koef, matrica, matricap): 
+def genetskiAlgoritam(koef): 
     vreme=list(range(0,brojGeneracija))
     populacija=kreirajPopulaciju()
     nizSrednjihPoena=[]
-    #minOdstupanje=7000
     for t in range (brojGeneracija):
         poeni=dodavanjePoena(populacija)
         populacija=razmnozavanje(poeni,populacija)
         populacija=mutacije(populacija,koef)
-#        print(populacija)
         populacija=krosover(populacija)
         nizSrednjihPoena.append (numpy.mean(poeni)/(99*brojCiklusa))
-#        odstupanje=numpy.std(poeni)
-#        if odstupanje<=minOdstupanje:
-#            minOdstupanje=odstupanje
-        for k in range (brojJedinki):
-            for i in range (0,64):
-                matricap[t][i]+=poeni[k]
-        for k in range (brojJedinki):
-            for i in range (0,64):
-                matricap[t][i]=int(matricap[t][i]/(99*brojCiklusa))                
-        for k in range (brojJedinki):
-            for i in range (0,64):
-                if populacija[k]==i:
-                    matrica[t][i]=matrica[t][i]+1
-        matrica[t][0]+=matrica[t][1]+matrica[t][2]+matrica[t][3]+matrica[t][4]+matrica[t][5]+matrica[t][6]+matrica[t][8]+matrica[t][9]+matrica[t][11]+matrica[t][12]+matrica[t][13]
-        #matrica[t][0]=matrica[t][0]/12
-        #grupa1
-        matrica[t][16]=(matrica[t][16]+matrica[t][18]+matrica[t][19])#/3
-        matrica[t][58]=(matrica[t][58]+matrica[t][57]+matrica[t][56])#/3
-        #grupa2
-        matrica[t][15]=(matrica[t][15]+matrica[t][14])#/2
-        #tft
-        matrica[t][21]=(matrica[t][21]+matrica[t][23])#/2
-        matrica[t][41]=(matrica[t][41]+matrica[t][43])#/2
-        #gtft
-        matrica[t][52]=(matrica[t][52]+matrica[t][53]+matrica[t][55])#/3
-        matrica[t][33]=(matrica[t][34]+matrica[t][35]+matrica[t][33])#/3
-        #grupa3
-        matrica[t][20]=(matrica[t][20]+matrica[t][22])#/2
-        matrica[t][59]=(matrica[t][59]+matrica[t][40])#/2
-        #grupa5
-        matrica[t][24]=(matrica[t][24]+matrica[t][27])#/2
-        matrica[t][42]=(matrica[t][42]+matrica[t][26])#/2
-        #grupa4
-        #pavlov
-        matrica[t][36]=(matrica[t][36]+matrica[t][39]+matrica[t][26])#/3
-        matrica[t][25]=(matrica[t][25]+matrica[t][37]+matrica[t][38])#/3
-        #flipflop
-        matrica[t][48]=(matrica[t][48]+matrica[t][49])#/2
-        matrica[t][50]=(matrica[t][50]+matrica[t][51])#/2
-        matrica[t][63]=(matrica[t][63]+matrica[t][15]+matrica[t][62]+matrica[t][30]+matrica[t][31]+matrica[t][61]+matrica[t][29]+matrica[t][60]+matrica[t][44]+matrica[t][46]+matrica[t][47]+matrica[t][14])#/12
-        matrica[t][1]=0
-        matrica[t][2]=0   
-        matrica[t][3]=0
-        matrica[t][4]=0
-        matrica[t][5]=0
-        matrica[t][6]=0
-        matrica[t][8]=0
-        matrica[t][9]=0
-        matrica[t][11]=0
-        matrica[t][12]=0
-        matrica[t][13]=0
-        matrica[t][14]=0
-        matrica[t][15]=0
-        matrica[t][19]=0
-        matrica[t][18]=0
-        matrica[t][22]=0
-        matrica[t][23]=0
-        matrica[t][27]=0
-        matrica[t][29]=0
-        matrica[t][30]=0
-        matrica[t][31]=0
-        matrica[t][34]=0
-        matrica[t][35]=0
-        matrica[t][37]=0
-        matrica[t][38]=0
-        matrica[t][39]=0
-        matrica[t][42]=0
-        matrica[t][43]=0
-        matrica[t][44]=0
-        matrica[t][46]=0
-        matrica[t][47]=0
-        matrica[t][49]=0
-        matrica[t][51]=0
-        matrica[t][53]=0
-        matrica[t][55]=0
-        matrica[t][57]=0
-        matrica[t][58]=0
-        matrica[t][60]=0
-        matrica[t][61]=0
-        matrica[t][62]=0           
-
-    plt.hist(poeni/ (99*brojCiklusa))
-    plt.ylabel('Broj jedinki')
-    plt.xlabel('Poeni')
-    plt.title('Grafik zastupljenosti poena u generaciji')
-    plt.show()
-    for i in range (64):
-        plt.plot(vreme,column(matrica,[i]))
-        putanja=(r'C:\Users\nina\Desktop\projekat2018\svaka1\grafik')
-        b=putanja + str(i) + '.jpg'
-        ''.join(b)
-        plt.ylabel('zastupljenst u drustvu [%]')
-        plt.xlabel('t [generacija]')
-        plt.title('Grafik zastupljenosti srategija po generaciji')
-        plt.savefig(b)
-    plt.show()
-#    for i in range (64):
-#        plt.plot(vreme,column(matricap,[i]))
-##        putanja=(r'C:\Users\nina\Desktop\projekat2018\poeni_svake1\grafik')
-##        b=putanja + str(i) + '.jpg'
-##        ''.join(b)
-#        plt.ylabel('srednji poeni startegije')
-#        plt.xlabel('t [generacija]')
-#        plt.title('Grafik srednjih poena srategije po generaciji')
+##ovde se plotuje histogram poena 
+#    plt.hist(poeni/ (99*brojCiklusa))
+#    plt.ylabel('Broj jedinki')
+#    plt.xlabel('Poeni')
+#    plt.title('Grafik zastupljenosti poena u generaciji')
 #    plt.show()
-#        plt.savefig(b)
-#        plt.clf()
-
-    return nizSrednjihPoena, matrica, matricap
+    #k=numpy.rot90(matrica)
+    return nizSrednjihPoena
 
 
-def sve(matrica,koeficijentMutacije):
+
+def sve(koeficijentMutacije):
     srednja=[]
-    o=list(range(0,64))  
-    matricaZastupljenosti= numpy.zeros([brojGeneracija,64], dtype=int)
+    stabilizacija=[]
+    o=list(range(64))
+    vreme=list(range(brojGeneracija))
     for x in range (10):
-        print (x)
+        k=x
         s=[]
-        vreme=list(range(brojGeneracija))
-        g=genetskiAlgoritam(koeficijentMutacije, matricaZastupljenosti,matricaP) 
-        #prviMinimum=-1
-        matrica=g[1]
-        srednjaVrednost=g[0]
+        s1=[]
+        srednjaVrednost=genetskiAlgoritam(koeficijentMutacije)
         srednja.append(srednjaVrednost)
-        matricaPo=g[2]
-#        if (g[2]<=):
-#            if (prviMinimum==-1):
-#                prviMinimum=x
-        plt.plot(vreme,srednjaVrednost)
-        axes = plt.gca()
-        axes.set_ylim([0,5])
-        plt.ylabel('srednji poeni')
-        plt.xlabel('generacija')
-        plt.title('Grafik srednjih poena po generaciji')
-#        putanja=(r'C:\Users\nina\Desktop\projekat2018\srednji_poeni1\grafik')
-#        b=putanja + str(x) + '.jpg'
-#        ''.join(b)
-#        plt.savefig(b)
-        plt.show()
-        plt.bar(o,matrica[brojGeneracija-1])
-        plt.ylabel('Zastupljenost strategije')
-        plt.xlabel('Različite stretgije')
-        plt.title('Grafik zastupljenosti strategija u posledjoj generaciji')
-        plt.show()
     numpy.rot90(srednja,3)
     for x in range (brojGeneracija):
         n=column(srednja,x)
         m=numpy.mean(n)
+        m1=numpy.std(n)/sqrt(10)
         s.append(m)
-    plt.plot(vreme,s)
-    axes = plt.gca()
-    axes.set_ylim([0,5])
-    plt.ylabel('Srednji poeni')
-    plt.xlabel('Generacija')
-    plt.title('Grafik srednjih poena po generaciji')
+        s1.append(m1)
+#    plt.plot(vreme,s)
+#    plt.errorbar(vreme, s, s1)
+#    axes = plt.gca()
+#    axes.set_ylim([0,5])
+#    plt.ylabel('Srednji poeni')
+#    plt.xlabel('Generacija')
+#    plt.title('Grafik srednjih poena po generaciji')
+#    plt.show()
+    return s, s1
+
+def svesve():
+    c=[]
+    d=[]
+    koeficijentMutacije=numpy.zeros(10, dtype=float)
+    for i in range (10):    
+        koeficijentMutacije[i]=(i+1)/100
+        print (koeficijentMutacije[i])
+        stab=sve(koeficijentMutacije[i])
+        a=stab[0]
+        b=stab[1]
+        e=0
+        for i in range (brojGeneracija):
+            if a[i]>2.9:
+                e=i
+                d=b[i]
+                k=numpy.mean(a[i:])
+                print (k)
+                break
+        c.append(k)
+    plt.plot(koeficijentMutacije, c)
+    plt.ylabel('Srednji broj poena posle stabilizacije')
+    plt.xlabel('Koeficijent mutacije')
     plt.show()
-    return(matricaZastupljenosti)
-    #return prviMinimum
-
-
-
-
+#        c.append(e)
+#    plt.plot(koeficijentMutacije, c)
+#    plt.errorbar(koeficijentMutacije, c, d)
+#    plt.ylabel('Generacija u kojoj se populacija stabilizovala')
+#    plt.xlabel('Koeficijent mutacije')
+#    plt.title('Grafik stabilacije poena u zavisnosti od koeficijenta mutacije')
+    
 matricaPoena=svakaSaSvakom()    
-matricaP= numpy.zeros([brojGeneracija,64], dtype=int)
-
-
-
-
-
-        #plt.scatter(t,numpy.mean(poeni)/(99*brojCiklusa))
-    #axes = plt.gca()
-    #axes.set_ylim([0,5])
-    #plt.show()
-#  
+svesve()
