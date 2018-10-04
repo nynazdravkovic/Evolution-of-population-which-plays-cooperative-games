@@ -163,18 +163,16 @@ def column(matrix, k):
 def genetskiAlgoritam(koef, matrica,f): 
     populacija=kreirajPopulaciju()
     nizSrednjihPoena=[]
-    #minOdstupanje=7000
     for t in range (brojGeneracija):
         poeni=dodavanjePoena(populacija)
         populacija=razmnozavanje(poeni,populacija)
         populacija=mutacije(populacija,koef)
-#        print(populacija)
         populacija=krosover(populacija)
         nizSrednjihPoena.append (numpy.mean(poeni)/(99*brojCiklusa))                
         for k in range (brojJedinki):
             for i in range (0,64):
-                    matrica[t][i][f]=matrica[t][i][f]+poeni[i]
-        matrica=matrica/(99*brojCiklusa)
+                if populacija[k]==i:
+                    matrica[t][i][f]=matrica[t][i][f]+1
         matrica[t][0][f]+=matrica[t][1][f]+matrica[t][2][f]+matrica[t][3][f]+matrica[t][4][f]+matrica[t][5][f]+matrica[t][6][f]+matrica[t][8][f]+matrica[t][9][f]+matrica[t][11][f]+matrica[t][12][f]+matrica[t][13][f]
         #matrica[t][0]=matrica[t][0]/12
         #grupa1
@@ -257,10 +255,10 @@ def sve(matricaZastupljenosti, koeficijentMutacije):
     srednja=[]
     o=list(range(64))
     vreme=list(range(brojGeneracija))
-    #matricaZastupljenosti= numpy.zeros([brojGeneracija,64,10], dtype=int)
+#    matricaZastupljenosti= numpy.zeros([brojGeneracija,64,15], dtype=int)
     a1=numpy.zeros([brojGeneracija,64], dtype=int)
     b1=numpy.zeros([brojGeneracija,64], dtype=int)
-    for x in range (10):
+    for x in range (15):
         k=x
         g=genetskiAlgoritam(koeficijentMutacije, matricaZastupljenosti,k) 
         #prviMinimum=-1
@@ -270,7 +268,7 @@ def sve(matricaZastupljenosti, koeficijentMutacije):
     for x in range (brojGeneracija):
         for y in range (64):
             a=numpy.mean(matrica[x][y])
-            b=numpy.std(matrica[x][y])/sqrt(10)
+            b=numpy.std(matrica[x][y])/sqrt(15)
             a1[x][y]=a
             b1[x][y]=b
     if a1[brojGeneracija-1][0]>1:
@@ -344,7 +342,7 @@ def svesve():
     matricaNova = []
     matricaGreske = []
     for i in range(10):
-        matricaa=numpy.zeros([brojGeneracija,64,10], dtype=int)
+        matricaa=numpy.zeros([brojGeneracija,64,15], dtype=int)
         koeficijentMutacije[i]=(i+1)/100
         aha=sve(matricaa,koeficijentMutacije[i])
         matricaNova.append(aha[0])
@@ -354,19 +352,6 @@ def svesve():
         for j in range (10):
             mutacije[j][i] = matricaNova[j][brojGeneracija-1][i]
             greske[j][i]=matricaGreske[j][brojGeneracija-1][i]
-#    for j in range(len(matricaNova[0])):#64
-#        tempNiz = numpy.array([])
-#        for i in matricaNova:
-#            tempNiz = numpy.append(tempNiz, i[j])
-#    for j in range(len(matricaGreske[0])):#64
-#        tempNiz1 = numpy.array([])
-#        for i in matricaGreske:
-#            tempNiz1 = numpy.append(tempNiz1, i[j])
-#    for k in range (64):
-#        for i in range (10):
-#            mutacije[k][i]=tempNiz[64*i+k]
-#            greske[k][i]=tempNiz1[64*i+k]
-#    
     m=mutacije
     g=greske
     if matricaNova[1][brojGeneracija-1][0]>1:

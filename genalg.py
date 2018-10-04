@@ -220,12 +220,13 @@ def svesve():
         for i in range (brojGeneracija):
             if a[i]>2.9:
                 e=i
-                d=b[i]
                 k=numpy.mean(a[i:])
-                print (k)
+                g=numpy.std(a[i:])/sqrt(10)
                 break
-        c.append(k)
+            c.append(k)
+            d.append(g)
     plt.plot(koeficijentMutacije, c)
+    plt.errorbar(koeficijentMutacije, c, d)
     plt.ylabel('Srednji broj poena posle stabilizacije')
     plt.xlabel('Koeficijent mutacije')
     plt.show()
