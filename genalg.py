@@ -16,7 +16,7 @@ koeficijentKrosovera=0.05
 brojGeneracija=1000
 cc=3
 cd=0
-dc=5
+dc=1
 dd=1
 razliciteStrategije=64
 matrica= numpy.zeros([brojGeneracija,64], dtype=int)
@@ -180,15 +180,22 @@ def genetskiAlgoritam(koef):
 
 def sve(koeficijentMutacije):
     srednja=[]
-    stabilizacija=[]
     o=list(range(64))
     vreme=list(range(brojGeneracija))
+    c=[]
     for x in range (10):
         k=x
         s=[]
-        s1=[]
+        s1=[]  
         srednjaVrednost=genetskiAlgoritam(koeficijentMutacije)
         srednja.append(srednjaVrednost)
+        for i in range (brojGeneracija):
+            if srednjaVrednost[i]>2.9:
+                c.append(i)
+                break
+    d=numpy.mean(c)
+    print (d)
+    f=numpy.std(c)/len(c)
     numpy.rot90(srednja,3)
     for x in range (brojGeneracija):
         n=column(srednja,x)
@@ -196,19 +203,21 @@ def sve(koeficijentMutacije):
         m1=numpy.std(n)/sqrt(10)
         s.append(m)
         s1.append(m1)
-#    plt.plot(vreme,s)
-#    plt.errorbar(vreme, s, s1)
-#    axes = plt.gca()
-#    axes.set_ylim([0,5])
-#    plt.ylabel('Srednji poeni')
-#    plt.xlabel('Generacija')
-#    plt.title('Grafik srednjih poena po generaciji')
-#    plt.show()
-    return s, s1
+    plt.plot(vreme,s)
+    plt.errorbar(vreme, s, s1)
+    axes = plt.gca()
+    axes.set_ylim([0,5])
+    plt.ylabel('Srednji poeni')
+    plt.xlabel('Generacija')
+    plt.title('Grafik srednjih poena po generaciji')
+    plt.show()
+    return s, s1, d, f
 
 def svesve():
     c=[]
     d=[]
+    j=[]
+    j1=[]
     koeficijentMutacije=numpy.zeros(10, dtype=float)
     for i in range (10):    
         koeficijentMutacije[i]=(i+1)/100
@@ -216,26 +225,29 @@ def svesve():
         stab=sve(koeficijentMutacije[i])
         a=stab[0]
         b=stab[1]
-        e=0
+        stabilizacija=stab[2]
+        greskestab=stab[3]
+        j.append(stabilizacija)
+        j1.append(greskestab)
         for i in range (brojGeneracija):
             if a[i]>2.9:
                 e=i
-                k=numpy.mean(a[i:])
+                p=numpy.mean(a[i:])
                 g=numpy.std(a[i:])/sqrt(10)
+                c.append(p)
+                d.append(g)
                 break
-            c.append(k)
-            d.append(g)
+        
     plt.plot(koeficijentMutacije, c)
     plt.errorbar(koeficijentMutacije, c, d)
     plt.ylabel('Srednji broj poena posle stabilizacije')
     plt.xlabel('Koeficijent mutacije')
     plt.show()
-#        c.append(e)
-#    plt.plot(koeficijentMutacije, c)
-#    plt.errorbar(koeficijentMutacije, c, d)
-#    plt.ylabel('Generacija u kojoj se populacija stabilizovala')
-#    plt.xlabel('Koeficijent mutacije')
-#    plt.title('Grafik stabilacije poena u zavisnosti od koeficijenta mutacije')
+    plt.plot(koeficijentMutacije, j)
+    plt.errorbar(koeficijentMutacije, j, j1)
+    plt.ylabel('Generacija u kojoj se populacija stabilizovala')
+    plt.xlabel('Koeficijent mutacije')
+    plt.title('Grafik stabilacije poena u zavisnosti od koeficijenta mutacije')
     
 matricaPoena=svakaSaSvakom()    
 svesve()

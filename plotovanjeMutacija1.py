@@ -16,11 +16,11 @@ brojJedinki=100
 brojCiklusa=100
 #koeficijentMutacije=0.02
 koeficijentKrosovera=0.05
-brojGeneracija=1000
+brojGeneracija=100
 
 cc=3
 cd=0
-dc=5
+dc=1
 dd=1
 razliciteStrategije=64
 matrica= numpy.zeros([brojGeneracija,64], dtype=int)
