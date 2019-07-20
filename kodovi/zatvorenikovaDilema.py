@@ -1,22 +1,25 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu May 10 23:41:01 2018
+Created on Sat Oct 27 19:07:38 2018
 
-@author: nina
+@author: Milica
 """
+
+
 import random
 import numpy
 from copy import copy, deepcopy
 import matplotlib.pyplot as plt
 from math import sqrt
+import xlsxwriter
 
 brojJedinki=100
 brojCiklusa=100
 koeficijentKrosovera=0.05
 brojGeneracija=1000
 cc=3
-cd=0
-dc=1
+cd=5
+dc=2
 dd=1
 razliciteStrategije=64
 matrica= numpy.zeros([brojGeneracija,64], dtype=int)
@@ -187,6 +190,7 @@ def sve(koeficijentMutacije):
         k=x
         s=[]
         s1=[]  
+        s2=[]
         srednjaVrednost=genetskiAlgoritam(koeficijentMutacije)
         srednja.append(srednjaVrednost)
         for i in range (brojGeneracija):
@@ -201,8 +205,11 @@ def sve(koeficijentMutacije):
         n=column(srednja,x)
         m=numpy.mean(n)
         m1=numpy.std(n)/sqrt(10)
+        m2=numpy.std(n)
         s.append(m)
         s1.append(m1)
+        s2.append(m2)
+    
     plt.plot(vreme,s)
     plt.errorbar(vreme, s, s1)
     axes = plt.gca()
@@ -211,32 +218,78 @@ def sve(koeficijentMutacije):
     plt.xlabel('Generacija')
     plt.title('Grafik srednjih poena po generaciji')
     plt.show()
-    return s, s1, d, f
+    return s, s1, d, f, s2
 
 def svesve():
     c=[]
     d=[]
     j=[]
     j1=[]
-    koeficijentMutacije=numpy.zeros(10, dtype=float)
-    for i in range (10):    
+    koeficijentMutacije=numpy.zeros(20, dtype=float)
+    for i in range (20):    
         koeficijentMutacije[i]=(i+1)/100
         print (koeficijentMutacije[i])
         stab=sve(koeficijentMutacije[i])
-        a=stab[0]
-        b=stab[1]
-        stabilizacija=stab[2]
-        greskestab=stab[3]
-        j.append(stabilizacija)
-        j1.append(greskestab)
+        a=numpy.asarray(stab[0])
+        a=numpy.reshape(a, (brojGeneracija,1))
+        b=numpy.asarray(stab[1])
+        b=numpy.reshape(b,(brojGeneracija,1))
+        stand=numpy.asarray(stab[4])
+        stand=numpy.reshape(stand, (brojGeneracija,1))
+        workbook = xlsxwriter.Workbook("poeni"+str(i) +".xlsx")
+        worksheet = workbook.add_worksheet()
+        row = 0
+        for col, data in enumerate(a):
+            worksheet.write_column(row, col, data)
+        workbook.close()
+        workbook = xlsxwriter.Workbook("greske_poena"+str(i) +".xlsx")
+        worksheet = workbook.add_worksheet()
+        row = 0
+        for col, data in enumerate(b):
+            worksheet.write_column(row, col, data)
+        workbook.close()
+        workbook = xlsxwriter.Workbook("devijacije_poena"+str(i)+".xlsx")
+        worksheet = workbook.add_worksheet()
+        row = 0
+        for col, data in enumerate(stand):
+            worksheet.write_column(row, col, data)
+        workbook.close()
         for i in range (brojGeneracija):
-            if a[i]>2.9:
-                e=i
+            if b[i]/a[i]<0.01:
                 p=numpy.mean(a[i:])
-                g=numpy.std(a[i:])/sqrt(10)
+                g=numpy.std(a[i:])/sqrt(5)
                 c.append(p)
                 d.append(g)
                 break
+            else:
+                c.append(0)
+                d.append(0)
+                break
+        for i in range (brojGeneracija):
+            if b[i]/a[i]<0.01:
+                u=i
+                v=b[i]
+                j.append(u)
+                j1.append(v)
+                break
+            else:
+                j.append(0)
+                j1.append(0)
+                break
+        
+#        for i in range (brojGeneracija):
+#            if b[i]/a[i]<0.01:
+#                p=numpy.mean(a[i:])
+#                g=numpy.std(a[i:])/sqrt(5)
+#                c.append(p)
+#                d.append(g)
+#                break
+#            else:
+#                c.append(0)
+#                d.append(0)
+#                break
+            
+                
         
     plt.plot(koeficijentMutacije, c)
     plt.errorbar(koeficijentMutacije, c, d)
